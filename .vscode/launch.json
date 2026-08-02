@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "simpleInterest",
+      "request": "launch",
+      "mainClass": "simpleInterest",
+      "projectName": "java-assignments_25d6ae1d"
+    },
+    {
+      "type": "java",
+      "name": "Launch ArthematicCalculator",
+      "request": "launch",
+      "mainClass": "ArthematicCalculator",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "args": ""
+    }
+  ]
+}
