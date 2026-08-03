@@ -1,9 +1,6 @@
 {
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ],
-    "java.debug.settings.onBuildFailureProceed": true,
-    "chat.disableAIFeatures": true
+  "java.project.sourcePaths": [
+    "src",
+    "week-1/src"
+  ]
 }
