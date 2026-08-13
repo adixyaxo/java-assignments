@@ -2,27 +2,23 @@ import java.util.Scanner;
 
 public class GreatestCommonDivisor {
 
-  private static Scanner input = new Scanner(System.in);
+  public void gcd(Scanner input) {
 
-  public static void main(String[] args) {
-
-    int firstNumber = TakeInput("Enter the First Number: ");
-    int secondNumber = TakeInput("Enter the Second Number: ");
+    int firstNumber = TakeInput("Enter the First Number: ",input);
+    int secondNumber = TakeInput("Enter the Second Number: ",input);
 
     int GCD = gcd(firstNumber, secondNumber);
 
     System.out.println("The Greatest Common Divisor is : " + GCD);
-
-    input.close();
   }
 
-  public static int TakeInput(String Message) {
+  public int TakeInput(String Message,Scanner input) {
     System.out.print(Message);
     int number = input.nextInt();
     return number;
   }
 
-  public static int gcd(int first, int second) {
+  public int gcd(int first, int second) {
 
     first = Math.abs(first);
     second = Math.abs(second);

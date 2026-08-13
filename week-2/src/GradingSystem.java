@@ -2,19 +2,17 @@ import java.util.Scanner;
 
 // Yah programe aditya dagar dwara likhit hai kripya isse copy krne ki koshish na kren
 public class GradingSystem {
-  public static void main(String[] args) {
-    System.out.println(classifyMark(TakeInput()));
+  public void grading(Scanner input) {
+    System.out.println(classifyMark(TakeInput(input)));
   }
 
-  public static double TakeInput() {
+  public double TakeInput(Scanner input) {
     System.out.print("Please enter your marks :: ");
-    Scanner input = new Scanner(System.in);
     double marks = input.nextDouble();
-    input.close();
     return marks;
   }
 
-  public static String classifyMark(double marks) {
+  public String classifyMark(double marks) {
     if (marks > 100) {
       return "Error Wrong input : Marks cant be more than 100 enter again";
     } else if (marks < 0) {

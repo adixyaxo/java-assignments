@@ -1,8 +1,7 @@
 import java.util.Scanner;
 
 public class NumberAnalyzer {
-  public static void main(String[] args) {
-    Scanner input = new Scanner(System.in);
+  public void na(Scanner input) {
     int number = readNumber(input);
     boolean is_positive = isPositive(number);
     int absValue = absoluteValue(number);
@@ -10,7 +9,6 @@ public class NumberAnalyzer {
     int count = countDigits(absValue);
     int sum = sumDigits(absValue);
     printReport(number, is_even, is_positive, count, sum);
-    input.close();
   }
 
   static int readNumber(Scanner input) {

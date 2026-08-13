@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 public class NumberReversal {
-  public static void main(String[] args) {
-    int number = TakeInput();
+  public void nr(Scanner input) {
+    int number = TakeInput(input);
     if (number==-1) {
       System.out.println("Error: The Number is less than zero");
     }
@@ -11,21 +11,19 @@ public class NumberReversal {
     }
   }
 
-  private static int reversed = 0;
+  private int reversed = 0;
 
-  public static int TakeInput() {
-    Scanner input = new Scanner(System.in);
+  public int TakeInput(Scanner input) {
     System.out.print("Enter the number you want to reverse: ");
     int number = input.nextInt();
     if (number < 0) {
       input.close();
       return -1;
     }
-    input.close();
     return number;
   }
 
-  public static int reverseNumber(int number) {
+  public int reverseNumber(int number) {
     while (number != 0) {
       int digit = number % 10;
       reversed = reversed * 10 + digit;

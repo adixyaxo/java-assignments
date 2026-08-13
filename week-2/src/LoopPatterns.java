@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 public class LoopPatterns {
-  public static void main(String[] args) {
-    int size = TakeInput();
+  public void loop(Scanner input){
+  int size = TakeInput(input);
     if (ValidateInput(size)) {
       PatternA(size);
       PatternB(size);
@@ -14,22 +14,20 @@ public class LoopPatterns {
     }
   }
 
-  public static boolean ValidateInput(int size) {
+  public boolean ValidateInput(int size) {
     if (size > 0) {
       return true;
     }
     return false;
   }
 
-  public static int TakeInput() {
-    Scanner input = new Scanner(System.in);
+  public int TakeInput(Scanner input) {
     System.out.print("Enter the size: ");
     int size = input.nextInt();
-    input.close();
     return size;
   }
 
-  public static void PatternA(int size) {
+  public void PatternA(int size) {
     for (int i = 1; i <= size; i++) {
       for (int j = 1; j <= size; j++) {
         System.out.print("* ");
@@ -38,7 +36,7 @@ public class LoopPatterns {
     }
   }
 
-  public static void PatternB(int size) {
+  public void PatternB(int size) {
     for (int i = 1; i <= size; i++) {
       for (int j = 1; j <= i; j++) {
         System.out.print("* ");
@@ -47,7 +45,7 @@ public class LoopPatterns {
     }
   }
 
-  public static void PatternC(int size) {
+  public void PatternC(int size) {
     for (int i = 1; i <= size; i++) {
       for (int j = 1; j <= i; j++) {
         System.out.print(j + " ");
@@ -56,7 +54,7 @@ public class LoopPatterns {
     }
   }
 
-  public static void PatternD(int size) {
+  public void PatternD(int size) {
     for (int i = size; i >= 1; i--) {
       for (int j = 1; j <= i; j++) {
         System.out.print("* ");
@@ -65,7 +63,7 @@ public class LoopPatterns {
     }
   }
 
-  public static void PatternE(int size) {
+  public void PatternE(int size) {
     for (int i = 1; i <= size; i++) {
       for (int j = 1; j <= size; j++) {
         System.out.print(i + " ");

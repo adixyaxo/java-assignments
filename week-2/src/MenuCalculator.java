@@ -1,14 +1,11 @@
 import java.util.Scanner;
 
 public class MenuCalculator {
-  public static void main(String[] args) {
-    Calculate();
-  }
 
-  public static void Calculate() {
+  public void Calculate(Scanner input) {
     while (true) {
       DisplayChoice();
-      int choice = ChooseOperation();
+      int choice = ChooseOperation(input);
       if (!ValidateOperationChoice(choice)) {
         System.out.println("Error: You Entered Wrong Choice");
         break;
@@ -16,19 +13,17 @@ public class MenuCalculator {
         System.out.println("Exiting Calculator");
         break;
       } else {
-        Scanner input = new Scanner(System.in);
         System.out.print("Enter the First Number: ");
         float num1 = input.nextInt();
         System.out.print("Enter the Second Number: ");
         float num2 = input.nextInt();
         float output = PerformOperation(num1, num2, choice);
         System.out.println(output);
-        input.close();
       }
     }
   }
 
-  public static void DisplayChoice() {
+  public void DisplayChoice() {
     System.out.println("Enter your operation choice\n" +
         "    1. Add\r\n" +
         "    2. Subtract\r\n" +
@@ -37,21 +32,19 @@ public class MenuCalculator {
         "    0. Exit");
   }
 
-  public static int ChooseOperation() {
-    Scanner input = new Scanner(System.in);
+  public int ChooseOperation(Scanner input) {
     int choice = input.nextInt();
-    input.close();
     return choice;
   }
 
-  public static boolean ValidateOperationChoice(int choice) {
+  public boolean ValidateOperationChoice(int choice) {
     if (choice >= 0 && choice < 5) {
       return true;
     }
     return false;
   }
 
-  public static float PerformOperation(float num1, float num2, int operation) {
+  public float PerformOperation(float num1, float num2, int operation) {
     switch (operation) {
       case 1:
         return (num1 + num2);
