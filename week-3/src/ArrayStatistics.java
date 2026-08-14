@@ -2,15 +2,22 @@ import java.util.Scanner;
 
 public class ArrayStatistics {
 
-    public void ArrayStatistics_main(){
+    public void ArrayStatistics_main(Scanner scanner){
+        Display(readArray(scanner));
+    }
 
+    public int readSize(Scanner scanner){
+        System.out.println("Enter the size of the array: ");
+        return scanner.nextInt();
     }
 
     public int[] readArray(Scanner scanner){
-        int[] array;
+        int[] array = new int[readSize(scanner)];
         for (int i = 0; i < array.length; i++) {
-
+            System.out.println("Enter the element "+i+": ");
+            array[i] = scanner.nextInt();
         }
+        return array;
     }
 
     public int sum(int[] values) {
@@ -65,5 +72,14 @@ public class ArrayStatistics {
                 System.out.println("negetive");
             }
         }
+    }
+
+    public void Display(int[] array){
+        System.out.println("SUM: " + sum(array));
+        System.out.println("AVERAGE: " + average(array));
+        System.out.println("MINIMUM: " + minimum(array));
+        System.out.println("MAXIMUM: " + maximum(array));
+        System.out.println("COUNT EVEN: " + countEven(array));
+        printSignCounts(array);
     }
 }
