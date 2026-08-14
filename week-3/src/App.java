@@ -9,6 +9,9 @@ public class App {
   ArrayStatistics AS = new ArrayStatistics();
   AS.ArrayStatistics_main(scanner);
 
+  LinearSearchToolkit LST = new LinearSearchToolkit();
+  LST.LinearSearchToolkit_main(scanner);
+
   scanner.close();
 
   }
