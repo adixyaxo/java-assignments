@@ -83,3 +83,6 @@ public class ArrayStatistics {
         printSignCounts(array);
     }
 }
+
+// pind turaan jado mallo mali kath lagda
+// showan utte lagde queue
