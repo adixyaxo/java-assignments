@@ -18,7 +18,9 @@ public class App {
     LST.LinearSearchToolkit_main(scanner);
 
     ArrayTransformations AT = new ArrayTransformations();
-    AT.ArrayTransformations_main(scanner);
+    AT.ArrayTransformations_main(scanner,AT.takeArrayInput(scanner, AT.arrayInputLength(scanner)));
+
+
 
     scanner.close();
 

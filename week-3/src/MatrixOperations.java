@@ -1,6 +1,6 @@
 public class MatrixOperations {
 
-  public void MatrixOperations_main(int[][] first,int[][] second){
+  public void MatrixOperations_main(int[][] first, int[][] second) {
     System.out.println("PERFORMING ALL POSSIBLE OPERATIONS ON THE ARRAYS");
     System.out.println();
 
@@ -117,7 +117,7 @@ public class MatrixOperations {
     }
   }
 
-    public void printMatrix(int[] matrix) {
+  public void printMatrix(int[] matrix) {
     for (int i = 0; i < matrix.length; i++) {
       System.out.print(matrix[i]);
       System.out.print(" ");
