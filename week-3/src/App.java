@@ -4,15 +4,23 @@ public class App {
 
   public static void main(String[] args) {
 
-  Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
 
-  ArrayStatistics AS = new ArrayStatistics();
-  AS.ArrayStatistics_main(scanner);
+    int[][] arr1 = { { 1, 0 }, { 0, 1 } };
+    int[][] arr2 = { { 0, 1 }, { 1, 0 } };
+    MatrixOperations MO = new MatrixOperations();
+    MO.MatrixOperations_main(arr1, arr2);
 
-  LinearSearchToolkit LST = new LinearSearchToolkit();
-  LST.LinearSearchToolkit_main(scanner);
+    ArrayStatistics AS = new ArrayStatistics();
+    AS.ArrayStatistics_main(scanner);
 
-  scanner.close();
+    LinearSearchToolkit LST = new LinearSearchToolkit();
+    LST.LinearSearchToolkit_main(scanner);
+
+    ArrayTransformations AT = new ArrayTransformations();
+    AT.ArrayTransformations_main(scanner);
+
+    scanner.close();
 
   }
 }

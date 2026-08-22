@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class LinearSearchToolkit {
+  
 
   public void LinearSearchToolkit_main(Scanner scanner){
     Display(TakeInputArray(scanner), TakeInputTarget(scanner));
