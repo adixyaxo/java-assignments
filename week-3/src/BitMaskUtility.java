@@ -170,14 +170,4 @@ public class BitMaskUtility {
     return number ^ (1 << position);
   }
 
-  public static void main(String[] args) {
-
-    Scanner scanner = new Scanner(System.in);
-
-    BitMaskUtility utility = new BitMaskUtility();
-
-    utility.menu(scanner);
-
-    scanner.close();
-  }
 }

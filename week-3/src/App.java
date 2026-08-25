@@ -20,6 +20,8 @@ public class App {
     ArrayTransformations AT = new ArrayTransformations();
     AT.ArrayTransformations_main(scanner,AT.takeArrayInput(scanner, AT.arrayInputLength(scanner)));
 
+    BitMaskUtility BMU = new BitMaskUtility();
+    BMU.menu(scanner);
 
 
     scanner.close();
