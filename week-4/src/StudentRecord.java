@@ -7,6 +7,7 @@ public class StudentRecord {
     Student std2 = new Student("Aman", "25csu006", 49);
     Student std3 = new Student("Aarav", "25csu004", 50);
     Student std4 = new Student("Bharot", "25csu009", -100);
+    Student std5 = new Student("Chirag", "25csu010", 79);
 
     System.out.println(std1);
     std1.display();
@@ -51,15 +52,14 @@ public class StudentRecord {
     }
 
     Student(String name, String studentId) {
-      this.name = name;
-      this.studentId = studentId;
+        this.name = name;
+        this.studentId = studentId;
     }
 
     Student(String name, String studentId, int mark) {
       if (setMark(mark)) {
       } else {
         System.err.println("Enter marks in valid range: between 0 and 100");
-        return;
       }
       this.name = name;
       this.studentId = studentId;

@@ -11,13 +11,14 @@ public class BankAccount {
     }
 
     Account(String accountNumber, String ownerName, double balance) {
-      if (balance < 0) {
-        System.err.println("Opening balance cannot be negative");
-      }
-
       this.accountNumber = accountNumber;
       this.ownerName = ownerName;
-      this.balance = balance;
+      if (balance < 0) {
+        System.err.println("Opening balance cannot be negative");
+        this.balance = 0;
+      } else {
+        this.balance = balance;
+      }
     }
 
     public boolean deposit(double amount) {
