@@ -29,17 +29,17 @@ public class ObjectReferenceLab {
     System.out.println("newBox score: " + newBox.getScore());
   }
 
-  static void addBonus(ScoreBox box, int bonus) {
+  public static void addBonus(ScoreBox box, int bonus) {
     if (box != null && bonus > 0) {
       box.updateScore(box.getScore() + bonus);
     }
   }
 
-  static void replaceLocally(ScoreBox box) {
+  public static void replaceLocally(ScoreBox box) {
     box = new ObjectReferenceLab().new ScoreBox(999);
   }
 
-  static ScoreBox createScoreBox(int score) {
+  public static ScoreBox createScoreBox(int score) {
     return new ObjectReferenceLab().new ScoreBox(score);
   }
 

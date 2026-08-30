@@ -1,0 +1,2039 @@
+CSL215 - INTRODUCTION TO JAVA
+WEEK 4 STUDENT REFERENCE NOTES
+
+CLASS DESIGN, ENCAPSULATION, CONSTRUCTORS, STRING, AND STRINGBUILDER
+
+Topics:
+1. Classes, objects, fields, methods, and references
+2. Instance members and static members
+3. Encapsulation, data hiding, and access modifiers
+4. Behavior-oriented class design and class invariants
+5. Default, parameterized, and overloaded constructors
+6. this, this(...), constructor chaining, and initialization
+7. Method overloading and Java pass-by-value for object references
+8. String fundamentals, immutability, comparison, and common methods
+9. StringBuilder fundamentals and mutable text construction
+10. Basic parsing and introductory toString()
+
+Prerequisite knowledge:
+
+- Variables, methods, parameters, return values, and local scope
+- Conditions, loops, arrays, and references
+- Java pass-by-value for primitive values and array references
+- Basic use of Scanner and command-line arguments
+
+Scope note:
+
+Week 4 focuses on designing one class well. Inheritance, abstract classes,
+interfaces, formal method overriding, and runtime polymorphism belong to Week
+5. Collections, Character utilities, full wrapper-class treatment, and
+exception handling belong to Week 6.
+
+======================================================================
+CLASS 1: CLASSES, OBJECTS, REFERENCES, AND MEMBER TYPES
+======================================================================
+
+1. WHY CLASSES?
+---------------
+
+Earlier programs mainly used primitive values, arrays, static methods, and
+standard-library objects. A class lets a programmer define a new type that
+groups related state and behavior.
+
+Examples of possible classes:
+
+- Student: name, identifier, mark, and result behavior
+- BankAccount: account number, balance, deposit, and withdrawal
+- Rectangle: width, height, area, and perimeter
+- Book: title, author, loan state, borrow, and return
+
+A class is a blueprint or type definition. An object is one runtime instance
+of that class.
+
+If Student is a class, a program can create several independent Student
+objects. Each object has its own instance state.
+
+
+2. A FIRST USER-DEFINED CLASS
+-----------------------------
+
+This small class is a lecture example. It is not one of the required Week 4
+programs.
+
+    class Lamp {
+        boolean on;
+
+        void turnOn() {
+            on = true;
+        }
+
+        void turnOff() {
+            on = false;
+        }
+
+        void printStatus() {
+            System.out.println(on ? "Lamp is on" : "Lamp is off");
+        }
+    }
+
+    public class LampDemo {
+        public static void main(String[] args) {
+            Lamp deskLamp = new Lamp();
+            deskLamp.printStatus();
+            deskLamp.turnOn();
+            deskLamp.printStatus();
+        }
+    }
+
+Important parts:
+
+    class Lamp
+
+Declares a new reference type named Lamp.
+
+    boolean on;
+
+Declares an instance field. Each Lamp object has its own on value.
+
+    void turnOn()
+
+Declares an instance method. It operates on the object used for the call.
+
+    Lamp deskLamp
+
+Declares a reference variable. It can refer to a Lamp object or contain null.
+
+    new Lamp()
+
+Creates a Lamp object in heap memory and invokes a constructor.
+
+    deskLamp.turnOn()
+
+Calls an instance method on the object referenced by deskLamp.
+
+
+3. CLASS, OBJECT, REFERENCE, AND INSTANCE
+-----------------------------------------
+
+These terms must be distinguished:
+
+Class
+    A type definition containing fields, constructors, and methods.
+
+Object
+    A runtime entity created from a class.
+
+Instance
+    Another word for an object created from a particular class.
+
+Reference variable
+    A variable whose value identifies an object, or is null.
+
+Example:
+
+    Lamp first = new Lamp();
+    Lamp second = new Lamp();
+
+There are two reference variables and two Lamp objects.
+
+    Lamp first = new Lamp();
+    Lamp alias = first;
+
+There are two reference variables but only one Lamp object. first and alias
+refer to the same object.
+
+
+4. FIELDS, LOCAL VARIABLES, AND PARAMETERS
+-------------------------------------------
+
+Field
+    Declared directly inside a class, outside all methods and constructors.
+    It forms part of an object's state unless declared static.
+
+Local variable
+    Declared inside a method, constructor, or block. It exists only within its
+    scope and must be initialized before use.
+
+Parameter
+    A local variable that receives a copied argument value when a method or
+    constructor is called.
+
+Example:
+
+    class CounterSample {
+        int count;                         // Instance field
+
+        void add(int amount) {             // amount is a parameter
+            int oldCount = count;          // Local variable
+            count = count + amount;
+            System.out.println(oldCount + " -> " + count);
+        }
+    }
+
+Fields receive default values when an object is created:
+
+    numeric fields       0 or 0.0
+    boolean fields       false
+    char fields          '\u0000'
+    reference fields     null
+
+Local variables do not receive automatic default values that may be read.
+
+
+5. INSTANCE STATE AND INSTANCE METHODS
+--------------------------------------
+
+An object's instance fields store its individual state. Instance methods
+normally read or change that state.
+
+    class Thermostat {
+        double temperature;
+
+        void increase(double amount) {
+            temperature += amount;
+        }
+
+        double getTemperature() {
+            return temperature;
+        }
+    }
+
+    Thermostat roomA = new Thermostat();
+    Thermostat roomB = new Thermostat();
+
+    roomA.increase(2.5);
+
+Changing roomA does not change roomB because they are different objects.
+
+Inside an instance method, an unqualified field name refers to the field of
+the current object.
+
+
+6. THE this REFERENCE
+---------------------
+
+Inside an instance method or constructor, this refers to the current object.
+
+    class Thermostat {
+        double temperature;
+
+        void setTemperature(double temperature) {
+            this.temperature = temperature;
+        }
+    }
+
+The parameter temperature shadows the field name. Therefore:
+
+    this.temperature
+
+means the current object's field, while:
+
+    temperature
+
+means the parameter in this method.
+
+Using this is optional when no local name hides the field, but it may still be
+used for clarity.
+
+
+7. CREATING AND USING MULTIPLE OBJECTS
+--------------------------------------
+
+    Thermostat first = new Thermostat();
+    Thermostat second = new Thermostat();
+
+    first.setTemperature(20.0);
+    second.setTemperature(25.0);
+
+    System.out.println(first.getTemperature());
+    System.out.println(second.getTemperature());
+
+Output:
+
+    20.0
+    25.0
+
+The objects have the same structure but independent instance state.
+
+
+8. null REFERENCES
+------------------
+
+A reference variable can contain null, meaning it currently identifies no
+object.
+
+    Thermostat device = null;
+
+This declaration is valid. The following call fails at runtime:
+
+    device.getTemperature();
+
+The failure is a NullPointerException because no object exists for the method
+call.
+
+A null check can prevent the invalid call:
+
+    if (device != null) {
+        System.out.println(device.getTemperature());
+    }
+
+An empty String and a null String are different:
+
+    String empty = "";       // Refers to a String of length zero.
+    String absent = null;    // Refers to no String object.
+
+
+9. REFERENCE IDENTITY AND ALIASING
+----------------------------------
+
+The operator == compares reference identity for objects: whether two
+references identify the same object.
+
+    Thermostat first = new Thermostat();
+    Thermostat alias = first;
+    Thermostat separate = new Thermostat();
+
+    System.out.println(first == alias);       // true
+    System.out.println(first == separate);    // false
+
+Aliasing occurs when multiple references identify the same mutable object.
+
+    first.setTemperature(30.0);
+    System.out.println(alias.getTemperature()); // 30.0
+
+The method call through first changed the one shared object, so the change is
+visible through alias.
+
+
+10. PASSING OBJECT REFERENCES TO METHODS
+----------------------------------------
+
+Java always passes arguments by value. When an argument is an object
+reference, the copied value is a reference to the same object.
+
+    static void warm(Thermostat device) {
+        device.increase(2.0);
+    }
+
+    Thermostat room = new Thermostat();
+    room.setTemperature(20.0);
+    warm(room);
+    System.out.println(room.getTemperature()); // 22.0
+
+The method parameter and room temporarily refer to the same object. Mutating
+that object is visible to the caller.
+
+Reassigning the parameter is different:
+
+    static void replace(Thermostat device) {
+        device = new Thermostat();
+        device.setTemperature(99.0);
+    }
+
+    Thermostat room = new Thermostat();
+    room.setTemperature(20.0);
+    replace(room);
+    System.out.println(room.getTemperature()); // Still 20.0
+
+The parameter receives a copy of room's reference. Reassigning that copy does
+not reassign room in the caller.
+
+
+11. RETURNING OBJECT REFERENCES
+-------------------------------
+
+A method may create and return an object reference:
+
+    static Thermostat createDefaultThermostat() {
+        Thermostat result = new Thermostat();
+        result.setTemperature(21.0);
+        return result;
+    }
+
+    Thermostat device = createDefaultThermostat();
+
+The object is not destroyed when the method returns because device now refers
+to it. An object becomes eligible for garbage collection only when no live
+reference can reach it.
+
+
+12. INSTANCE MEMBERS AND static MEMBERS
+---------------------------------------
+
+Instance member
+    Belongs to one object. Access it through an object reference.
+
+Static member
+    Belongs to the class as a whole. Access it through the class name.
+
+    class VisitTracker {
+        int personalVisits;
+        static int totalVisits;
+
+        void recordVisit() {
+            personalVisits++;
+            totalVisits++;
+        }
+    }
+
+    VisitTracker first = new VisitTracker();
+    VisitTracker second = new VisitTracker();
+
+    first.recordVisit();
+    first.recordVisit();
+    second.recordVisit();
+
+At this point:
+
+    first.personalVisits        2
+    second.personalVisits       1
+    VisitTracker.totalVisits    3
+
+Prefer accessing a static field through the class name:
+
+    VisitTracker.totalVisits
+
+rather than through an object reference.
+
+
+13. static METHODS AND INSTANCE METHODS
+---------------------------------------
+
+A static method belongs to the class and has no current object. Therefore, it
+cannot directly use an instance field or this.
+
+    class Conversion {
+        static double centimetresToMetres(double centimetres) {
+            return centimetres / 100.0;
+        }
+    }
+
+Call:
+
+    double metres = Conversion.centimetresToMetres(250.0);
+
+An instance method is called on an object and can access its instance fields.
+
+    room.getTemperature();
+
+main is static because Java must start the application before an application
+object has been created.
+
+
+14. MEMORY MODEL: STACK FRAMES AND HEAP OBJECTS
+-----------------------------------------------
+
+Use this introductory model:
+
+- Each active method call has a stack frame.
+- Parameters and local variables belong to that frame.
+- Objects are generally allocated in heap memory.
+- A local reference variable is in a stack frame and identifies a heap object.
+- Instance fields are part of the object.
+- Static fields belong to the loaded class, not to individual objects.
+- Returning from a method removes that call's frame.
+- Removing a local reference does not destroy an object if another live
+  reference can still reach it.
+
+Example diagram to draw:
+
+    main frame                         heap
+    ----------                         -------------------------
+    first  --------------------------> Thermostat object (20.0)
+    alias  --------------------------/
+    second --------------------------> Thermostat object (25.0)
+
+
+15. COMMON CLASS AND OBJECT ERRORS
+----------------------------------
+
+15.1 Calling an instance method as though it were static
+
+Incorrect:
+
+    Thermostat.getTemperature();
+
+An object is required:
+
+    Thermostat device = new Thermostat();
+    device.getTemperature();
+
+15.2 Accessing an instance field from static main without an object
+
+Incorrect:
+
+    public static void main(String[] args) {
+        temperature = 20.0;
+    }
+
+main has no current Thermostat object.
+
+15.3 Dereferencing null
+
+    Thermostat device = null;
+    device.getTemperature();
+
+This compiles but throws NullPointerException at runtime.
+
+15.4 Confusing an object with a reference
+
+    Thermostat device;
+
+This declares a local reference variable but does not create a Thermostat
+object. A local variable must also be assigned before use.
+
+15.5 Assuming a copied reference creates a copied object
+
+    Thermostat copy = original;
+
+This copies the reference. It does not create a new independent Thermostat.
+
+
+======================================================================
+CLASS 2: ENCAPSULATION AND BEHAVIOR-ORIENTED CLASS DESIGN
+======================================================================
+
+16. WHAT IS ENCAPSULATION?
+--------------------------
+
+Encapsulation bundles related state and behavior inside a class and provides
+a controlled public interface.
+
+Data hiding restricts direct access to implementation details, usually with
+private fields.
+
+Abstraction presents the important operations while hiding unnecessary
+details.
+
+These ideas are related but not identical:
+
+- A class can bundle fields and methods but still expose all fields publicly.
+  It has some structural encapsulation but weak data hiding.
+- Making every field private improves data hiding, but automatically adding
+  unrestricted setters may still allow invalid state.
+- Good abstraction lets clients request meaningful behavior without knowing
+  exactly how the class performs it.
+
+
+17. WHY PUBLIC FIELDS ARE RISKY
+-------------------------------
+
+Weak design:
+
+    class WaterTank {
+        public double capacity;
+        public double currentAmount;
+    }
+
+Any client can create impossible state:
+
+    WaterTank tank = new WaterTank();
+    tank.capacity = 100.0;
+    tank.currentAmount = 500.0;
+
+The object now contains more water than its capacity.
+
+Better design keeps fields private and exposes operations that preserve the
+rules.
+
+
+18. ACCESS MODIFIERS
+--------------------
+
+public
+    Accessible from any class where the declaring class is accessible.
+
+private
+    Accessible only inside the declaring class.
+
+No modifier (package-private)
+    Accessible to classes in the same package.
+
+protected
+    Accessible in the same package and through inheritance rules.
+
+Week 4 primarily uses public for the class interface and private for internal
+fields. Package-private and protected are introduced for recognition; their
+full design implications are developed later.
+
+
+19. PRIVATE FIELDS AND PUBLIC METHODS
+-------------------------------------
+
+    class WaterTank {
+        private double capacity;
+        private double currentAmount;
+
+        public double getCapacity() {
+            return capacity;
+        }
+
+        public double getCurrentAmount() {
+            return currentAmount;
+        }
+
+        public boolean add(double amount) {
+            if (amount <= 0 || currentAmount + amount > capacity) {
+                return false;
+            }
+
+            currentAmount += amount;
+            return true;
+        }
+    }
+
+The client can observe state through getters and request a validated change
+through add(). It cannot directly assign currentAmount.
+
+
+20. GETTERS, SETTERS, AND MEANINGFUL BEHAVIOR
+---------------------------------------------
+
+A getter returns information about state. A setter directly replaces a field
+value. Neither is automatically good or bad; the design depends on the class
+rules.
+
+For a bank account, this setter would be dangerous:
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+It allows any caller to replace the balance without recording a deposit or
+withdrawal.
+
+Behavior-oriented methods are clearer:
+
+    deposit(amount)
+    withdraw(amount)
+    transferTo(otherAccount, amount)
+
+These operations express the domain meaning and can enforce rules.
+
+Use a setter when replacing a value is genuinely part of the class interface,
+and validate the new value when necessary.
+
+
+21. CLASS INVARIANTS
+--------------------
+
+An invariant is a condition that should remain true for every valid object
+after construction and after each public operation.
+
+Possible WaterTank invariants:
+
+    capacity > 0
+    currentAmount >= 0
+    currentAmount <= capacity
+
+Possible Student invariants:
+
+    name is not null or blank
+    mark is between 0 and 100
+
+Possible Rectangle invariants:
+
+    width > 0
+    height > 0
+
+Constructors and public mutating methods should preserve the invariants.
+
+
+22. VALIDATION STRATEGIES BEFORE EXCEPTIONS
+-------------------------------------------
+
+Exception handling is formally taught later. Week 4 may use simple strategies:
+
+1. Return boolean to report success or failure.
+
+       public boolean setLevel(int newLevel) {
+           if (newLevel < 0 || newLevel > 10) {
+               return false;
+           }
+           level = newLevel;
+           return true;
+       }
+
+2. Keep the existing state when an invalid change is requested.
+
+3. Use a documented default value during construction when appropriate.
+
+4. Validate input before calling a constructor or method.
+
+Do not silently accept invalid state. Later, constructors and methods can use
+exceptions to reject invalid arguments more explicitly.
+
+
+23. COMMAND-QUERY SEPARATION
+----------------------------
+
+A command changes state. A query returns information without changing state.
+
+Commands:
+
+    turnOn()
+    deposit(amount)
+    addItem(quantity)
+
+Queries:
+
+    isOn()
+    getBalance()
+    getAvailableQuantity()
+
+Separating these responsibilities makes behavior easier to understand and
+test. Some methods reasonably change state and return a status, such as a
+boolean withdraw(amount), but the returned value should have a clear meaning.
+
+
+24. DESIGNING A CLASS FROM REQUIREMENTS
+---------------------------------------
+
+Example requirement:
+
+    A membership card stores a member name and remaining visits. A new card
+    must have a non-blank member name and a non-negative visit allowance. A
+    visit may be used only when at least one remains. Clients may view but not
+    directly replace the remaining visits.
+
+Design process:
+
+1. Identify the object and its responsibilities.
+2. Identify essential state.
+3. Write invariants.
+4. Choose constructors that create valid objects.
+5. Choose meaningful public operations.
+6. Decide which details remain private.
+7. Define normal, boundary, and invalid tests.
+
+Possible design, without implementation:
+
+    class MembershipCard
+
+    private fields:
+        String memberName
+        int remainingVisits
+
+    public constructor:
+        MembershipCard(String memberName, int remainingVisits)
+
+    public queries:
+        String getMemberName()
+        int getRemainingVisits()
+        boolean hasVisitsRemaining()
+
+    public command:
+        boolean useVisit()
+
+
+25. COHESION AND SINGLE RESPONSIBILITY
+--------------------------------------
+
+A cohesive class has closely related fields and methods. It should represent
+one clear concept.
+
+Avoid a Student class that also calculates bank interest, controls menus, and
+stores unrelated application settings.
+
+Input/output may remain in a separate driver class while the domain class
+manages its own state and behavior.
+
+Example separation:
+
+    MembershipCard       domain state and rules
+    MembershipCardDemo   input, object creation, calls, and displayed results
+
+For weekly submissions, both may be placed in one source file if only the
+driver is public and the filename matches that public class.
+
+
+26. OBJECTS AS FIELDS
+---------------------
+
+A field may itself be a reference to another object.
+
+    class ReadingList {
+        private String ownerName;
+        private String currentTitle;
+    }
+
+Both fields refer to String objects. Later, a class may hold references to
+user-defined objects as well. This is called composition when one object is
+constructed from or owns other component objects.
+
+Detailed composition design is enrichment for Week 4 and will be revisited
+when students have designed more classes.
+
+
+27. EQUALITY: IDENTITY VERSUS CONTENT
+-------------------------------------
+
+For primitive values, == compares values.
+
+For references, == compares whether the references identify the same object.
+
+    String first = new String("Java");
+    String second = new String("Java");
+
+    System.out.println(first == second);       // false
+    System.out.println(first.equals(second));  // true
+
+For String, equals() compares character content.
+
+User-defined equality rules are not required in Week 4. Students should not
+write a custom equals() method yet. Formal overriding and the relationship
+between equals() and hashCode() belong later.
+
+
+28. SHARED MUTABLE OBJECTS
+--------------------------
+
+Aliasing matters most when objects are mutable.
+
+If two references identify one mutable object, a state change through either
+reference affects the shared object.
+
+String objects are immutable, so String methods do not modify the existing
+String. StringBuilder objects are mutable, so aliases observe changes made to
+the shared builder.
+
+This contrast will be traced in Class 3.
+
+
+29. COMMON ENCAPSULATION ERRORS
+-------------------------------
+
+29.1 Public fields with no protection
+
+Clients can create invalid state directly.
+
+29.2 A setter that bypasses domain behavior
+
+setBalance() is usually weaker than deposit() and withdraw().
+
+29.3 Validation in the driver only
+
+Another client could call the class without the driver's checks. Important
+invariants should be protected by the class itself.
+
+29.4 Returning a mutable internal object directly
+
+This can expose internal state. Defensive copying is introduced later when
+students work with richer mutable fields.
+
+29.5 A class that performs unrelated tasks
+
+Low cohesion makes the class difficult to understand and reuse.
+
+
+======================================================================
+CLASS 3: CONSTRUCTORS, STRING, STRINGBUILDER, PARSING, AND toString()
+======================================================================
+
+30. PURPOSE OF A CONSTRUCTOR
+----------------------------
+
+A constructor initializes a new object. Its name matches the class name and it
+has no return type, not even void.
+
+    class Distance {
+        private double metres;
+
+        Distance(double metres) {
+            this.metres = metres;
+        }
+    }
+
+Creation:
+
+    Distance journey = new Distance(1250.0);
+
+The new expression allocates an object and invokes the matching constructor.
+
+
+31. DEFAULT CONSTRUCTOR VERSUS NO-ARG CONSTRUCTOR
+-------------------------------------------------
+
+These terms are often confused.
+
+Default constructor
+    A no-argument constructor supplied automatically by Java only when the
+    class declares no constructor at all.
+
+No-argument constructor
+    Any constructor with no parameters. It may be written by the programmer.
+
+    class Marker {
+        Marker() {
+            System.out.println("Programmer-written no-arg constructor");
+        }
+    }
+
+Once a programmer declares any constructor, Java does not also add the default
+constructor.
+
+    class Distance {
+        Distance(double metres) {
+            // ...
+        }
+    }
+
+This no longer compiles:
+
+    new Distance();
+
+unless a no-argument constructor is explicitly added.
+
+
+32. PARAMETERIZED CONSTRUCTORS
+------------------------------
+
+A parameterized constructor receives values needed to initialize the object.
+
+    class Distance {
+        private double metres;
+
+        Distance(double metres) {
+            if (metres >= 0) {
+                this.metres = metres;
+            }
+        }
+    }
+
+Constructors should establish valid initial state. Week 4 tasks state the
+required behavior for invalid arguments.
+
+
+33. CONSTRUCTOR OVERLOADING
+---------------------------
+
+A class may declare several constructors with different parameter lists.
+
+    class Distance {
+        private double metres;
+
+        Distance() {
+            metres = 0.0;
+        }
+
+        Distance(double metres) {
+            this.metres = metres;
+        }
+
+        Distance(double value, String unit) {
+            if (unit.equalsIgnoreCase("km")) {
+                metres = value * 1000.0;
+            } else {
+                metres = value;
+            }
+        }
+    }
+
+The compiler selects a constructor from the number, order, and compatible
+types of arguments.
+
+
+34. CONSTRUCTOR CHAINING WITH this(...)
+---------------------------------------
+
+One constructor can call another constructor in the same class:
+
+    class Distance {
+        private double metres;
+
+        Distance() {
+            this(0.0);
+        }
+
+        Distance(double metres) {
+            this.metres = metres;
+        }
+    }
+
+Rules:
+
+- this(...) invokes another constructor in the same class.
+- It must be the first statement in the constructor.
+- A constructor cannot call itself directly or create a constructor cycle.
+- Chaining reduces duplicate initialization logic.
+
+The keyword super(...) calls a parent-class constructor. It is taught with
+inheritance in Week 5.
+
+
+35. INITIALIZATION ORDER AT WEEK 4 LEVEL
+----------------------------------------
+
+For a simple class without inheritance, use this order:
+
+1. Memory for the new object is allocated.
+2. Instance fields receive default values.
+3. Explicit field initializers run in source order.
+4. The selected constructor runs.
+
+Example:
+
+    class InitializationDemo {
+        private int first;
+        private int second = 5;
+
+        InitializationDemo() {
+            first = 10;
+            second = 20;
+        }
+    }
+
+The constructor finishes with first equal to 10 and second equal to 20.
+
+Static initialization, initializer blocks, and inheritance order are not core
+Week 4 requirements.
+
+
+36. METHOD OVERLOADING
+----------------------
+
+Methods are overloaded when they have the same name but different parameter
+lists in the same class.
+
+    static int area(int side) {
+        return side * side;
+    }
+
+    static int area(int width, int height) {
+        return width * height;
+    }
+
+The return type alone cannot distinguish overloaded methods.
+
+Invalid:
+
+    static int convert(double value)
+    static String convert(double value)
+
+The parameter lists are identical.
+
+Overloading is compile-time selection. Overriding is a different concept
+involving inheritance and is taught in Week 5.
+
+
+37. STRING IS A CLASS
+---------------------
+
+String is a reference type from java.lang. It represents an immutable sequence
+of characters.
+
+    String course = "Introduction to Java";
+
+A String literal is usually the clearest way to create a String. Avoid writing
+new String("text") unless demonstrating object identity.
+
+Because String is a class, a String variable may contain a reference or null.
+
+
+38. STRING IMMUTABILITY
+-----------------------
+
+An immutable object's state cannot be changed after creation.
+
+    String text = "java";
+    text.toUpperCase();
+    System.out.println(text); // java
+
+toUpperCase() returns a new String. It does not modify text's existing String.
+
+    text = text.toUpperCase();
+    System.out.println(text); // JAVA
+
+The variable is reassigned to the returned String.
+
+Immutability makes sharing String objects safe because one reference cannot
+change the characters observed by another reference.
+
+
+39. STRING LITERALS AND THE STRING POOL
+---------------------------------------
+
+Java may reuse identical String literals from a String pool:
+
+    String first = "Java";
+    String second = "Java";
+
+first == second may be true because both references may identify the pooled
+literal. Do not use that behavior for content comparison.
+
+Always use equals() or equalsIgnoreCase() for String content.
+
+
+40. ESSENTIAL STRING METHODS
+----------------------------
+
+length()
+
+    String text = "Java";
+    int length = text.length();           // 4
+
+charAt(index)
+
+    char firstCharacter = text.charAt(0); // 'J'
+
+Valid indexes are 0 through length() - 1. Invalid indexes cause
+StringIndexOutOfBoundsException.
+
+substring(beginIndex)
+
+    "Introduction".substring(5)           // "duction"
+
+substring(beginIndex, endIndex)
+
+    "Introduction".substring(0, 5)        // "Intro"
+
+The begin index is inclusive and the end index is exclusive.
+
+indexOf(...)
+
+    "banana".indexOf('a')                 // 1
+    "banana".indexOf("ana")               // 1
+    "banana".indexOf('z')                 // -1
+
+equals(...)
+
+    "Java".equals("Java")                 // true
+    "Java".equals("java")                 // false
+
+equalsIgnoreCase(...)
+
+    "Java".equalsIgnoreCase("java")       // true
+
+compareTo(...)
+
+    first.compareTo(second)
+
+Returns a negative value, zero, or a positive value according to lexicographic
+ordering. Do not depend on an exact negative or positive magnitude.
+
+toLowerCase() and toUpperCase()
+
+    "Java".toLowerCase()                  // "java"
+    "Java".toUpperCase()                  // "JAVA"
+
+trim()
+
+    "  Java  ".trim()                     // "Java"
+
+trim() removes leading and trailing characters no greater than U+0020. The
+broader strip() method exists in modern Java, but trim() remains the syllabus
+operation for this unit.
+
+toCharArray()
+
+    char[] characters = "Java".toCharArray();
+
+This creates a new character array. Character-array algorithms receive deeper
+practice in Week 6.
+
+
+41. EMPTY, BLANK, AND null STRINGS
+----------------------------------
+
+Empty String:
+
+    ""
+
+It has length zero.
+
+Blank String:
+
+    "   "
+
+It contains only whitespace. After trim(), its length is zero.
+
+null:
+
+    String name = null;
+
+It refers to no String object.
+
+Basic non-blank validation:
+
+    if (name != null && !name.trim().isEmpty()) {
+        // name contains some non-space text
+    }
+
+The null check must come first because of short-circuit evaluation.
+
+
+42. STRING CONCATENATION
+------------------------
+
+The + operator creates a new String result:
+
+    String fullName = firstName + " " + lastName;
+
+For a small fixed expression, + is readable and appropriate.
+
+Repeated concatenation in a loop can create many temporary String objects:
+
+    String result = "";
+    for (int number = 1; number <= 100; number++) {
+        result = result + number + " ";
+    }
+
+StringBuilder is normally preferable for repeated construction.
+
+
+43. STRINGBUILDER: MUTABLE TEXT
+-------------------------------
+
+StringBuilder is a mutable sequence of characters.
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("Java");
+    builder.append(' ');
+    builder.append(17);
+
+    String result = builder.toString();
+
+Unlike String methods, StringBuilder operations often change the same builder
+object and return that builder for method chaining.
+
+    builder.append("Week").append(' ').append(4);
+
+
+44. ESSENTIAL STRINGBUILDER METHODS
+-----------------------------------
+
+append(value)
+
+    builder.append("Java");
+
+insert(index, value)
+
+    StringBuilder text = new StringBuilder("Jva");
+    text.insert(1, 'a');                    // "Java"
+
+deleteCharAt(index)
+
+    text.deleteCharAt(1);
+
+setCharAt(index, character)
+
+    text.setCharAt(0, 'j');
+
+reverse()
+
+    new StringBuilder("Java").reverse();   // builder containing "avaJ"
+
+length() and charAt(index)
+
+    int length = builder.length();
+    char character = builder.charAt(0);
+
+toString()
+
+    String immutableResult = builder.toString();
+
+StringBuilder indexes use the same zero-based boundary reasoning as String and
+arrays.
+
+
+45. STRING VERSUS STRINGBUILDER ALIASING
+----------------------------------------
+
+String example:
+
+    String first = "Java";
+    String second = first;
+    first = first.toUpperCase();
+
+second still refers to "Java" because the String was not mutated. first was
+reassigned to another String.
+
+StringBuilder example:
+
+    StringBuilder first = new StringBuilder("Java");
+    StringBuilder alias = first;
+    first.append(" 17");
+
+Both references observe the same builder containing "Java 17".
+
+This is the same shared-mutable-object behavior discussed in Class 1.
+
+
+46. BASIC TEXT-TO-NUMBER PARSING
+--------------------------------
+
+Command-line arguments and some input sources provide text. Parsing converts
+valid numeric text to a primitive value.
+
+    int age = Integer.parseInt("21");
+    double price = Double.parseDouble("19.95");
+    long population = Long.parseLong("8000000");
+
+Direction:
+
+    String -> primitive value
+
+Invalid numeric text causes NumberFormatException:
+
+    Integer.parseInt("twenty")
+
+For Week 4, students should recognize this runtime failure and use valid input.
+Handling it with try-catch belongs to Week 6.
+
+String to boolean behaves differently:
+
+    Boolean.parseBoolean("true")    // true
+    Boolean.parseBoolean("anything else") // false
+
+Full wrapper-class treatment and boxing/unboxing are deferred to Week 6.
+
+
+47. CONVERTING VALUES TO STRING
+-------------------------------
+
+Common approaches:
+
+    String first = Integer.toString(21);
+    String second = Double.toString(19.95);
+    String third = String.valueOf(21);
+
+Concatenation also converts values when one operand is a String:
+
+    String message = "Age: " + 21;
+
+Use an explicit conversion when the intent is to obtain a String value rather
+than immediately format a larger message.
+
+
+48. INTRODUCTORY toString() FOR USER-DEFINED CLASSES
+----------------------------------------------------
+
+A class can provide a readable String representation of an object.
+
+    class Distance {
+        private double metres;
+
+        Distance(double metres) {
+            this.metres = metres;
+        }
+
+        public String toString() {
+            return metres + " m";
+        }
+    }
+
+    Distance journey = new Distance(1250.0);
+    System.out.println(journey);
+
+println automatically requests the object's String representation.
+
+For Week 4:
+
+- toString() returns a String.
+- It should not modify the object.
+- It should produce a useful representation of the object's state.
+- @Override may be shown, but formal overriding theory is deferred.
+
+In Week 5, students will learn that toString() is inherited from Object and
+that this implementation overrides the inherited method.
+
+
+49. STRING-BASED CLASS INVARIANTS
+---------------------------------
+
+Classes often store String fields. Typical rules include:
+
+- name must not be null
+- name must not be blank after trim()
+- identifier must have a required prefix or length
+- category comparison may ignore case
+
+Example helper:
+
+    static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+Do not duplicate the same validation logic in every constructor and method.
+Use a private helper when the logic belongs only to the class.
+
+
+50. LEETCODE CONNECTIONS FOR STRING FUNDAMENTALS
+------------------------------------------------
+
+LeetCode 58 - Length of Last Word
+
+- Scan from the end.
+- Skip trailing spaces.
+- Count characters until the next space or the beginning.
+- Reinforces length(), charAt(), indexes, and boundary handling.
+
+LeetCode 344 - Reverse String
+
+- The official problem uses char[].
+- Use two indexes and swap characters in place.
+- Reinforces arrays, references, and two pointers from Week 3.
+- Compare it with new StringBuilder(text).reverse().toString(), while
+  understanding that the LeetCode task expects in-place character-array work.
+
+Broader String scanning, Character methods, frequency counting, hashing,
+palindromes, and sliding windows remain in Week 6.
+
+
+51. COMMON CONSTRUCTOR AND STRING ERRORS
+----------------------------------------
+
+51.1 Declaring a return type on a constructor
+
+    void Distance(double metres) {
+        // This is a method, not a constructor.
+    }
+
+51.2 Forgetting this during shadowing
+
+    Distance(double metres) {
+        metres = metres;
+    }
+
+The parameter is assigned to itself. Use this.metres = metres.
+
+51.3 Calling this(...) after another statement
+
+this(...) must be the first constructor statement.
+
+51.4 Expecting a default constructor after declaring another constructor
+
+Java supplies a default constructor only when no constructor is declared.
+
+51.5 Comparing String content with ==
+
+Use equals() or equalsIgnoreCase().
+
+51.6 Ignoring a returned immutable String
+
+    name.trim();
+
+Use:
+
+    name = name.trim();
+
+when reassignment is intended.
+
+51.7 Calling a method on a null String
+
+Check value != null first.
+
+51.8 Treating StringBuilder as immutable
+
+append(), insert(), deleteCharAt(), setCharAt(), and reverse() mutate the
+builder object.
+
+
+======================================================================
+GUIDED PRACTICE - COMPLETE AT HOME
+======================================================================
+
+The guided practice focuses on fundamentals, output prediction, short traces,
+and tricky questions. Complete it independently and ask questions in the next
+class or practical.
+
+52. CLASS, OBJECT, AND MEMBER CLASSIFICATION
+--------------------------------------------
+
+For each item in the code, classify it as class, object, reference variable,
+instance field, static field, local variable, parameter, instance method, or
+static method.
+
+    class Ticket {
+        private String eventName;
+        private boolean used;
+        private static int issuedCount;
+
+        Ticket(String eventName) {
+            this.eventName = eventName;
+            issuedCount++;
+        }
+
+        boolean use() {
+            if (used) {
+                return false;
+            }
+            used = true;
+            return true;
+        }
+
+        static int getIssuedCount() {
+            return issuedCount;
+        }
+    }
+
+    Ticket first = new Ticket("Concert");
+
+Also answer:
+
+1. How many issuedCount fields exist for 100 Ticket objects?
+2. How many used fields exist for 100 Ticket objects?
+3. Why can getIssuedCount() access issuedCount directly?
+4. Why can a static method not directly read eventName?
+
+
+53. PASS-BY-VALUE REFERENCE TRACING
+-----------------------------------
+
+Trace this program without running it first:
+
+    static void adjust(Thermostat device) {
+        device.increase(5.0);
+    }
+
+    static void replace(Thermostat device) {
+        device = new Thermostat();
+        device.setTemperature(100.0);
+    }
+
+    Thermostat room = new Thermostat();
+    room.setTemperature(20.0);
+    adjust(room);
+    replace(room);
+    System.out.println(room.getTemperature());
+
+Answer:
+
+1. What reference value is copied into adjust's parameter?
+2. Why is the mutation visible after adjust returns?
+3. Why does replace not change which object room references?
+4. What is the exact output?
+
+
+54. CONSTRUCTOR EXECUTION AND CHAINING
+--------------------------------------
+
+Trace the output and final field values:
+
+    class Label {
+        private String text = "unset";
+        private int width = 1;
+
+        Label() {
+            this("blank", 10);
+            System.out.println("A");
+        }
+
+        Label(String text) {
+            this(text, text.length());
+            System.out.println("B");
+        }
+
+        Label(String text, int width) {
+            this.text = text;
+            this.width = width;
+            System.out.println("C");
+        }
+    }
+
+Trace separately:
+
+    new Label();
+    new Label("Java");
+    new Label("CSL215", 12);
+
+For each creation:
+
+1. List constructor calls in order.
+2. Write the printed output.
+3. State final text and width.
+4. Identify where default field values and explicit initializers apply.
+
+
+55. FIND AND CORRECT CLASS-DESIGN ERRORS
+----------------------------------------
+
+For each fragment, identify the error or design weakness and correct it.
+
+1. A constructor with a return type:
+
+       class BookCopy {
+           void BookCopy(String code) {
+               this.code = code;
+           }
+       }
+
+2. Field shadowing:
+
+       Item(double price) {
+           price = price;
+       }
+
+3. Static access to instance state:
+
+       class Player {
+           private int score;
+
+           static void reset() {
+               score = 0;
+           }
+       }
+
+4. Missing constructor:
+
+       class Point {
+           Point(int x, int y) {
+               // ...
+           }
+       }
+
+       Point origin = new Point();
+
+5. Unrestricted mutation:
+
+       public void setQuantity(int quantity) {
+           this.quantity = quantity;
+       }
+
+   The invariant is quantity >= 0.
+
+6. Null dereference:
+
+       String title = null;
+       System.out.println(title.length());
+
+7. Ignored immutable result:
+
+       String code = "  cs101  ";
+       code.trim().toUpperCase();
+       System.out.println(code);
+
+8. Incorrect String comparison:
+
+       if (category == "CORE") {
+           // ...
+       }
+
+9. Invalid constructor chaining:
+
+       Item() {
+           System.out.println("Creating item");
+           this("Unknown");
+       }
+
+10. Overloading by return type only:
+
+       int convert(String value)
+       double convert(String value)
+
+
+56. STRING OUTPUT AND METHOD TRACING
+------------------------------------
+
+Predict the exact result of each expression:
+
+1.  "Introduction".length()
+2.  "Java".charAt(2)
+3.  "Introduction".substring(0, 5)
+4.  "Introduction".substring(5)
+5.  "banana".indexOf("ana")
+6.  "banana".indexOf('z')
+7.  "Java".equals("java")
+8.  "Java".equalsIgnoreCase("java")
+9.  "  Java  ".trim().length()
+10. "cat".compareTo("cat")
+
+Then trace:
+
+    String text = "  Java Programming  ";
+    String cleaned = text.trim();
+    String upper = cleaned.toUpperCase();
+    String piece = upper.substring(5, 16);
+
+State text, cleaned, upper, and piece. Identify which variables may refer to
+different String objects and explain why text is unchanged.
+
+
+57. STRING IDENTITY, CONTENT, AND null
+--------------------------------------
+
+Predict the output and explain every line:
+
+    String first = "Java";
+    String second = "Java";
+    String third = new String("Java");
+    String absent = null;
+
+    System.out.println(first == second);
+    System.out.println(first == third);
+    System.out.println(first.equals(third));
+    System.out.println(first.equalsIgnoreCase("java"));
+    System.out.println(absent == null);
+
+Then write a null-safe condition that accepts a category equal to "CORE"
+without case sensitivity. Explain why the null check must be first.
+
+
+58. PARSING AND CONVERSION PRACTICE
+-----------------------------------
+
+For each expression, state its result and type, or name the runtime exception:
+
+1. Integer.parseInt("42")
+2. Integer.parseInt(" 42 ")
+3. Integer.parseInt("4.2")
+4. Double.parseDouble("4.2")
+5. Long.parseLong("8000000")
+6. Boolean.parseBoolean("TRUE")
+7. Boolean.parseBoolean("yes")
+8. String.valueOf(42)
+9. Integer.toString(42)
+10. "Result: " + 4 + 2
+
+Then write valid conversions for:
+
+- command-line age text to int
+- price text to double
+- an int identifier to String
+- a boolean value to String
+
+Full try-catch handling of invalid input is deferred to Week 6.
+
+
+59. SHORT REVIEW QUESTIONS
+--------------------------
+
+1. What is the difference between a class and an object?
+2. What does a reference variable contain?
+3. What is the difference between a field and a local variable?
+4. When do fields receive default values?
+5. What does this refer to?
+6. What is aliasing?
+7. Why can mutation through one alias be observed through another?
+8. What exactly is copied when an object reference is passed to a method?
+9. Why does reassigning a reference parameter not reassign the caller's
+   variable?
+10. What is the difference between an instance field and a static field?
+11. Why can a static method not directly use this?
+12. What is encapsulation?
+13. How is data hiding related to encapsulation?
+14. Why are private fields not sufficient by themselves for good design?
+15. What is a class invariant?
+16. Why might deposit() be better than setBalance()?
+17. What is the difference between a command and a query?
+18. When does Java supply a default constructor?
+19. What is the difference between a default constructor and a programmer-
+    written no-argument constructor?
+20. What rules apply to this(...) constructor calls?
+21. Can methods be overloaded using only different return types?
+22. Why should String content use equals() rather than ==?
+23. What does String immutability mean?
+24. When is StringBuilder preferable to String concatenation?
+25. Which StringBuilder methods mutate the builder?
+26. What does Integer.parseInt() return?
+27. What happens when invalid numeric text is parsed?
+28. What is the purpose of toString()?
+29. Why does println(object) produce a String representation?
+30. Which Week 4 topics will be revisited through inheritance in Week 5?
+
+
+======================================================================
+TWO-HOUR PRACTICAL AND WEEKLY PROGRAMMING
+======================================================================
+
+All 10 programs are required by the end-of-week GitHub deadline. The two-hour
+practical is used to begin selected high-value programs, discuss designs, test
+objects, and resolve doubts. Students complete the remaining programs during
+the rest of the week.
+
+Each required file may contain one public driver class and one or more
+package-private model classes. The filename must match the public class name.
+Do not copy a complete lecture example as a submission.
+
+60. TASK 1 - STUDENT RECORD
+---------------------------
+
+Required filename: StudentRecord.java
+
+Create a Student model class and a public StudentRecord driver.
+
+Student requirements:
+
+- private String name
+- private String studentId
+- private int mark
+- a constructor receiving all three values
+- name and studentId must be non-null and non-blank
+- mark must remain between 0 and 100
+- getters for all fields
+- boolean setMark(int newMark), preserving the old mark when invalid
+- boolean hasPassed()
+- String getClassification()
+- a useful toString()
+
+Driver requirements:
+
+- create at least three students
+- test marks 49, 50, 79, 80, and an invalid update
+- display every object directly with println
+
+
+61. TASK 2 - BANK ACCOUNT
+-------------------------
+
+Required filename: BankAccount.java
+
+Create an Account model class and a public BankAccount driver.
+
+Account requirements:
+
+- private String accountNumber
+- private String ownerName
+- private double balance
+- constructor with account number and owner; initial balance is zero
+- overloaded constructor accepting a valid non-negative opening balance
+- boolean deposit(double amount)
+- boolean withdraw(double amount)
+- getters, but no public setBalance()
+- String toString()
+
+Test positive, zero, and negative deposits; valid and excessive withdrawals;
+and two independent Account objects.
+
+
+62. TASK 3 - RECTANGLE MODEL
+----------------------------
+
+Required filename: RectangleModel.java
+
+Create a Rectangle class and a public RectangleModel driver.
+
+Requirements:
+
+- private double width and height
+- no-argument constructor creating a 1 by 1 rectangle
+- one-argument constructor creating a square
+- two-argument constructor creating a rectangle
+- use this(...) constructor chaining
+- positive dimensions only
+- getArea(), getPerimeter(), isSquare(), and scale(double factor)
+- overloaded area methods only if their responsibilities are clearly stated
+- useful toString()
+
+Trace the constructor call order for all three construction forms.
+
+
+63. TASK 4 - BOOK LOAN
+----------------------
+
+Required filename: BookLoan.java
+
+Create a Book class and a public BookLoan driver.
+
+Book state:
+
+- title, author, bookCode, and loaned status
+
+Behavior:
+
+- validate non-blank text in the constructor
+- boolean borrowBook()
+- boolean returnBook()
+- boolean isAvailable()
+- getters for descriptive fields
+- no unrestricted setter for loaned status
+- readable toString()
+
+Test repeated borrowing, returning an available book, and independent books.
+
+
+64. TASK 5 - PRODUCT INVENTORY
+-----------------------------
+
+Required filename: ProductInventory.java
+
+Create a Product class and a public ProductInventory driver.
+
+Product requirements:
+
+- code, name, unit price, quantity, and a static product counter
+- overloaded constructors for zero quantity and supplied quantity
+- positive price and non-negative quantity invariants
+- restock(int amount)
+- sell(int amount), rejecting unavailable quantities
+- getInventoryValue()
+- static getProductCount()
+- toString()
+
+Create several products and demonstrate independent quantities and one shared
+static count.
+
+
+65. TASK 6 - COURSE ENROLLMENT
+------------------------------
+
+Required filename: CourseEnrollment.java
+
+Create a Course class and a public CourseEnrollment driver.
+
+Course requirements:
+
+- course code, title, capacity, and enrolled count
+- constructor establishes a positive capacity and zero enrollment
+- boolean enroll()
+- boolean withdraw()
+- boolean isFull()
+- int getAvailableSeats()
+- no direct setter for enrolled count
+- readable toString()
+
+Test empty, one-seat-remaining, full, over-enrollment, withdrawal, and
+withdrawal from an empty course.
+
+
+66. TASK 7 - OBJECT REFERENCE LAB
+--------------------------------
+
+Required filename: ObjectReferenceLab.java
+
+Create a ScoreBox class containing one private int score and validated methods
+to read and update it. In the public driver, create methods:
+
+    static void addBonus(ScoreBox box, int bonus)
+    static void replaceLocally(ScoreBox box)
+    static ScoreBox createScoreBox(int score)
+
+Requirements:
+
+- demonstrate two aliases to one ScoreBox
+- demonstrate a separate ScoreBox
+- show mutation through an alias
+- show why parameter reassignment does not replace the caller's reference
+- return and store a newly created object
+- print reference-identity comparisons with ==
+
+
+67. TASK 8 - STRING FUNDAMENTALS AND LEETCODE
+---------------------------------------------
+
+Required filename: StringFundamentals.java
+
+Implement these static methods without regular expressions:
+
+    static boolean hasText(String value)
+    static String normalizeCourseCode(String code)
+    static int countOccurrences(String text, char target)
+    static int lengthOfLastWord(String text)
+    static void reverseString(char[] characters)
+
+Requirements:
+
+- hasText must distinguish null, empty, blank, and non-blank Strings
+- normalizeCourseCode trims and converts to uppercase
+- countOccurrences scans using length() and charAt()
+- lengthOfLastWord implements LeetCode 58 using a backward scan
+- reverseString implements LeetCode 344 in place using two pointers
+- test normal, empty, one-character, trailing-space, and null cases where the
+  method contract permits null
+
+
+68. TASK 9 - STRINGBUILDER TOOLKIT
+---------------------------------
+
+Required filename: StringBuilderToolkit.java
+
+Implement these static methods primarily with StringBuilder:
+
+    static String reverse(String text)
+    static String repeat(String text, int count)
+    static String joinWords(String[] words, String separator)
+    static String removeCharacterAt(String text, int index)
+    static String replaceCharacterAt(String text, int index, char replacement)
+    static String buildNumberedList(String[] items)
+
+Requirements:
+
+- use append(), insert() where suitable, deleteCharAt(), setCharAt(),
+  reverse(), length(), charAt(), and toString() across the toolkit
+- avoid repeated String concatenation inside loops
+- define behavior for null, empty, invalid count, and invalid index inputs
+- demonstrate that converting to String produces an immutable result even if
+  the builder later changes
+
+
+69. TASK 10 - TEXT PROFILE AND PARSING
+--------------------------------------
+
+Required filename: TextProfile.java
+
+Build a Profile class and a public TextProfile driver.
+
+Profile fields:
+
+- String name
+- int age
+- double heightMetres
+
+Requirements:
+
+- receive name, age text, and height text through command-line arguments
+- convert age with Integer.parseInt()
+- convert height with Double.parseDouble()
+- create a Profile object through a parameterized constructor
+- validate non-blank name, non-negative age, and positive height
+- provide getters and a readable toString()
+- demonstrate String.valueOf(), Integer.toString(), or Double.toString() for
+  at least one reverse conversion
+- document that invalid numeric text causes NumberFormatException; try-catch
+  handling is not required until Week 6
+
+
+70. RECOMMENDED IN-CLASS PRACTICAL PRIORITY
+-------------------------------------------
+
+All 10 tasks remain due by the end-of-week GitHub deadline. Suggested in-class
+starting order:
+
+1. Task 1 - Student Record: constructor, fields, and one invariant
+2. Task 2 - Bank Account: behavior-oriented methods instead of setBalance()
+3. Task 3 - Rectangle Model: constructor overloading and chaining
+4. Task 7 - Object Reference Lab: alias and parameter-reassignment tracing
+
+If time remains, begin Task 8 or Task 9. String tasks may also be started after
+Class 3. Students complete all remaining files independently before the weekly
+deadline.
+
+
+71. REQUIRED SUBMISSIONS FOR WEEK 4
+----------------------------------
+
+The general deadlines, verification process, academic-integrity rules, and
+5-mark scheme are defined in InClass&AssignmentSubmissionRules.docx.
+
+Condition 1 - Notebook work
+
+Submit the following in the course notebook:
+
+- Classification work from Section 52
+- Pass-by-value reference tracing from Section 53
+- Constructor output from Section 54
+- Corrected class and String errors from Section 55
+- String output questions from Sections 56 and 57
+- Parsing and conversion answers from Section 58
+- Short review answers from Section 59
+
+Condition 2 - Programming work
+
+Upload all 10 required Java files to the Week 4 GitHub submission folder:
+
+- StudentRecord.java
+- BankAccount.java
+- RectangleModel.java
+- BookLoan.java
+- ProductInventory.java
+- CourseEnrollment.java
+- ObjectReferenceLab.java
+- StringFundamentals.java
+- StringBuilderToolkit.java
+- TextProfile.java
+
+Every filename must match its public class name. Every program must compile,
+run, preserve the stated invariants, use the required constructors and methods,
+and be explainable by the student. Work started during the practical is still
+subject to the same end-of-week GitHub deadline as independently completed
+work.
