@@ -6,6 +6,7 @@ public class App {
         CampusManagementApp CMA = new CampusManagementApp();
         CMA.CampusManagementApp_main();
 
-
+        PayrollManagementApp PMA = new PayrollManagementApp();
+        PMA.PyayrollManagementApp_main();
     }
 }
