@@ -10,7 +10,7 @@ public class ShapeManagementApp {
     for (int i = 0; i < arr.length; i++) {
       arr[i].Display();
     }
-    System.out.println("Total Perimeter: "+Shape.totalPerimeter);
+    System.out.println("Total Perimeter: "+Double.toString(Shape.totalPerimeter));
   }
 
   private abstract class Shape {
@@ -29,8 +29,8 @@ public class ShapeManagementApp {
 
     public void Display(){
       System.out.println("Name: "+name);
-      System.out.println("Area: "+area());
-      System.out.println("Perimeter: "+perimeter());
+      System.out.println("Area: "+Double.toString(area()));
+      System.out.println("Perimeter: "+Double.toString(perimeter()));
       System.out.println();
     }
   }
