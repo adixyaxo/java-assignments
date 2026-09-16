@@ -31,6 +31,14 @@ public class CampusManagementApp {
       super(name);
       this.CGPA = CGPA;
     }
+
+    public double calculateAverageCGPA(){
+      int sum = 0;
+      for(int i = 0; i < CGPA.length; i++){
+        sum += CGPA[i];
+      }
+      return (double)sum / CGPA.length;
+    }
   }
 
   public class Researcher extends Person{
