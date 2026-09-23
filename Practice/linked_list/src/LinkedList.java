@@ -87,4 +87,27 @@ public class LinkedList {
     node.data.Display();
   }
 
+  public void DeleteAtStart(){
+    Node temp = Head.next;
+    Head.next = null;
+    Head = temp;
+  }
+
+  public void DeleteAtIndex(int index){
+    if (index<0) {
+      System.out.println("Error: Negetive Index Not Allowed");
+      return;
+    }
+    if (index == 0) {
+      DeleteAtStart();
+      return;
+    }
+    Node node = GetNode(index - 1);
+    if (node == null) {
+      System.out.println("Error: No Node found at index");
+    }
+    Node next = node.next.next;
+    node.next.next = null;
+    node.next = next;
+  }
 }

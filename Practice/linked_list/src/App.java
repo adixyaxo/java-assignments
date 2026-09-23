@@ -6,6 +6,7 @@ public class App {
         l1.InsertAtIndex("Aditya Dagar", 2,0);
         l1.InsertAtIndex("Aditya Dagar", 3,0);
         l1.InsertAtIndex("Aditya Dagar", 4,0);
+        l1.DeleteAtIndex(2);
         l1.Display();
 
         LinkedList l2 = new LinkedList("Aditya Dagar", 0);
