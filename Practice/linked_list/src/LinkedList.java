@@ -1,20 +1,36 @@
 public class LinkedList {
-  public Node head = null;
+  public Node Head = null;
   public Node current = null;
 
-  public void NewLinkedList(String name, int roll_no) {
-    Node head = new Node(name, roll_no, null);
-    this.head = head;
-    this.current = head;
+  LinkedList(){
+
+  }
+
+  LinkedList(String name,int roll_no){
+    CreateHead(name, roll_no);
+  }
+
+
+  private void CreateHead(String name, int roll_no) {
+    Head = new Node(name, roll_no);
+    this.current = Head;
   }
 
   public void InsertNewNode(String name, int roll_no) {
-    current.next = new Node(name, roll_no, null);
-    current = current.next;
+
+    if(Head == null)
+    {
+      CreateHead(name, roll_no);
+    }
+    else
+    {
+      current.next = new Node(name, roll_no);
+      current = current.next;
+    }
   }
 
   public void Display() {
-    Node traversal = head;
+    Node traversal = Head;
     while (traversal != null) {
       traversal.data.Display();
       System.out.println();
