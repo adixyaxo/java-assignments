@@ -10,13 +10,15 @@ public class DLL {
   DLL(String name, String roll_no) {
     base = new Node(new Data(name, roll_no));
     base.prev = null;
-    base.next = tail;
     tail = null;
+    base.next = tail;
+
   }
 
   public void DisplayFromStart() {
     if (base == null) {
       System.out.println("No elements found in the Linked List");
+      return;
     }
     Node traversal = base;
     while (traversal != null) {
@@ -52,10 +54,11 @@ public class DLL {
       tail = new Node(new Data(name, roll_no));
       tail.prev = base;
       tail.next = null;
+      base.next = tail;
       return;
     }
     tail.next = new Node(new Data(name, roll_no));
-    tail.next.prev = tail.next;
+    tail.next.prev = tail;
     tail = tail.next;
     tail.next = null;
     return;
