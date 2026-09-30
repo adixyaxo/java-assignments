@@ -64,4 +64,34 @@ public class DLL {
     return;
   }
 
+  public void Delete(int index) {
+    Node traversal = base;
+    for (int i = 0; i < index; i++) {
+      traversal = traversal.next;
+    }
+    Node next = traversal.next;
+    traversal.next = null;
+    Node prev = traversal.prev;
+    traversal.prev = null;
+    next.prev = prev;
+    prev.next = next;
+  }
+
+  public void Delete(int index, boolean from_back) {
+    if (from_back) {
+      Node traversal = tail;
+      for (int i = 0; i < index; i++) {
+        traversal = traversal.prev;
+      }
+      Node next = traversal.next;
+      traversal.next = null;
+      Node prev = traversal.prev;
+      traversal.prev = null;
+      next.prev = prev;
+      prev.next = next;
+      return;
+    } else {
+      Delete(index);
+    }
+  }
 }
