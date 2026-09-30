@@ -64,9 +64,29 @@ public class DLL {
     return;
   }
 
+  public void DeleteFromStart() {
+    Node OldBase = base;
+    base = base.next;
+    OldBase.next = null;
+    base.prev = null;
+    return;
+  }
+
+  public void DeleteFromEnd() {
+    Node OldTail = tail;
+    tail = tail.prev;
+    OldTail.prev = null;
+    tail.next = null;
+    return;
+  }
+
   public void Delete(int index) {
     if (index < 0) {
       System.out.println("Index out of bound");
+      return;
+    }
+    if (index == 0) {
+      DeleteFromStart();
       return;
     }
     Node traversal = base;
@@ -75,6 +95,10 @@ public class DLL {
     }
     if (traversal == null) {
       System.out.println("Index out of bound");
+      return;
+    }
+    if (traversal.next == null) {
+      DeleteFromEnd();
       return;
     }
     Node next = traversal.next;
@@ -90,6 +114,10 @@ public class DLL {
       System.out.println("Index out of bound");
       return;
     }
+    if (index == 0) {
+      DeleteFromEnd();
+      return;
+    }
     if (from_back) {
       Node traversal = tail;
       for (int i = 0; i < index; i++) {
@@ -97,6 +125,10 @@ public class DLL {
       }
       if (traversal == null) {
         System.out.println("Index out of bound");
+        return;
+      }
+      if (traversal.prev == null) {
+        DeleteFromStart();
         return;
       }
       Node next = traversal.next;

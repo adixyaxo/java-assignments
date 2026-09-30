@@ -9,6 +9,7 @@ public class App {
         dll.InsertAtEnd("Raymon", "6");
         dll.Delete(2);
         dll.Delete(2,true);
+        dll.Delete(0);
         dll.DisplayFromEnd();
         dll.DisplayFromStart();
     }
