@@ -10,6 +10,34 @@ public class LinkedList {
     CreateHead(name, roll_no);
   }
 
+  public Node getLastNode() {
+    Node traversal = Head;
+    while (traversal.next != null) {
+      traversal = traversal.next;
+    }
+    return traversal;
+  }
+
+  public static Node copyNode(Node n) {
+    Node newNode = new Node(new Data(n.data.name, n.data.roll_no));
+    return newNode;
+  }
+
+  public static LinkedList concat(LinkedList l1, LinkedList l2) {
+    LinkedList ll = new LinkedList();
+    Node traversal = l1.Head;
+    while (traversal.next != null) {
+      ll.InsertAtEnd(copyNode(traversal));
+      traversal = traversal.next;
+    }
+    traversal = l2.Head;
+    while (traversal.next != null) {
+      ll.InsertAtEnd(copyNode(traversal));
+      traversal = traversal.next;
+    }
+    return ll;
+  }
+
   private void CreateHead(String name, int roll_no) {
     Head = new Node(name, roll_no);
     this.current = Head;
@@ -24,8 +52,17 @@ public class LinkedList {
     }
   }
 
-  public void InsertAtStart(String name, int roll_no){
-    Node new_node = new Node(name,roll_no);
+  public void InsertAtEnd(Node node) {
+    if (Head == null) {
+      CreateHead(node.data.name, node.data.roll_no);
+      return;
+    }
+    current.next = node;
+    current = current.next;
+  }
+
+  public void InsertAtStart(String name, int roll_no) {
+    Node new_node = new Node(name, roll_no);
     new_node.next = Head;
     Head = new_node;
   }
@@ -35,7 +72,7 @@ public class LinkedList {
       System.out.println("Negetive Index is not allowed");
       return;
     }
-    if (index==0) {
+    if (index == 0) {
       this.InsertAtStart(name, roll_no);
       return;
     }
@@ -65,7 +102,7 @@ public class LinkedList {
   }
 
   public Node GetNode(int index) {
-    if (index<0) {
+    if (index < 0) {
       return null;
     }
     Node traversal = Head;
@@ -87,14 +124,14 @@ public class LinkedList {
     node.data.Display();
   }
 
-  public void DeleteAtStart(){
+  public void DeleteAtStart() {
     Node temp = Head.next;
     Head.next = null;
     Head = temp;
   }
 
-  public void DeleteAtIndex(int index){
-    if (index<0) {
+  public void DeleteAtIndex(int index) {
+    if (index < 0) {
       System.out.println("Error: Negetive Index Not Allowed");
       return;
     }

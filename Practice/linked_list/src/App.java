@@ -17,5 +17,18 @@ public class App {
         l2.DisplayNodeAtIndex(0);
         l2.DisplayNodeAtIndex(2);
         l2.DisplayNodeAtIndex(5);
+
+        System.out.println("The New Added Node");
+        LinkedList sum = LinkedList.concat(l1, l2);
+        sum.Display();
+        System.out.println("Deleting From Start");
+        System.out.println("Final LL");
+        sum.DeleteAtStart();
+        sum.Display();
+        System.out.println("LL1");
+        l1.Display();
+        System.out.println("LL2");
+        l2.Display();
+
     }
 }
