@@ -29,6 +29,10 @@ public class App {
         l1.Display();
         System.out.println("LL2");
         l2.Display();
-
+        System.out.println();
+        System.out.println("LL1 Reverse");
+        l1.reverse(l1.Head);
+        System.out.println("LL2 Reverse");
+        l2.reverse(l2.Head);
     }
 }

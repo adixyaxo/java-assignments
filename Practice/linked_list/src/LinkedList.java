@@ -147,4 +147,13 @@ public class LinkedList {
     node.next.next = null;
     node.next = next;
   }
+
+  public void reverse(Node head){
+    Node traversal = head;
+    if (head == null) {
+      return;
+    }
+    reverse(head.next);
+    traversal.data.Display();
+  }
 }
