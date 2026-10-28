@@ -51,4 +51,26 @@ public class StudentMangement {
     }
     System.out.println("No student found with the Student Id: " + student_id);
   }
+
+  void UpdateStudent(int student_id_old , int student_id_new){
+    for(StudentInfo s : students){
+      if (s.getStudent_id() == student_id_old) {
+        s.setStudent_id(student_id_new);
+        System.out.println("Student ID updated successfully");
+        return;
+      }
+    }
+    System.out.println("Student Not Found");
+  }
+
+  void UpdateStudent(String student_name_old , String student_name_new){
+    for(StudentInfo s : students){
+      if (s.getStudent_name() == student_name_old) {
+        s.setStudent_name(student_name_new);
+        System.out.println("Student ID updated successfully");
+        return;
+      }
+    }
+    System.out.println("Student Not Found");
+  }
 }
